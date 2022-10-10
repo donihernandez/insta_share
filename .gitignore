@@ -36,3 +36,8 @@ yarn-error.log*
 next-env.d.ts
 
 .eslintcache
+
+cypress/support/
+cypress/fixtures/
+cypress/snapshots/
+cypress/downloads/

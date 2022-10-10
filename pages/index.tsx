@@ -14,6 +14,9 @@ const Home: NextPage = () => {
                 />
                 <link href="/favicon.ico" rel="icon" />
             </Head>
+            <main>
+                <h1>Welcome to Insta Share</h1>
+            </main>
         </div>
     );
 };

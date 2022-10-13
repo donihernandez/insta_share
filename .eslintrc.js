@@ -7,15 +7,7 @@ module.exports = {
         node: true,
         jest: true,
     },
-    extends: [
-        'eslint:recommended',
-        'plugin:react/recommended',
-        'plugin:react-hooks/recommended',
-        'plugin:prettier/recommended',
-        'plugin:@typescript-eslint/eslint-recommended',
-        'plugin:@typescript-eslint/recommended',
-        'next/core-web-vitals',
-    ],
+    extends: ['next', 'next/core-web-vitals'],
     parserOptions: {
         ecmaFeatures: {
             jsx: true,
@@ -91,7 +83,6 @@ module.exports = {
                 checkAliases: true,
             },
         ],
-
         'react/jsx-sort-props': [
             'error',
             {

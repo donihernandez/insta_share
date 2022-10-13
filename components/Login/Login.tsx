@@ -22,9 +22,9 @@ import { useForm } from 'react-hook-form';
 
 import { COLORS } from '@/styles/theme';
 import { ArrowBackIcon } from '@chakra-ui/icons';
-import { useAuthContext } from 'context/AuthContext';
 
-import { useBreakpoints } from 'hooks';
+import { useAuth, useBreakpoints } from 'hooks';
+import { signIn } from 'next-auth/react';
 
 type FormData = {
     email: string;
@@ -32,8 +32,8 @@ type FormData = {
 };
 
 const Login: FC = () => {
-    const { signIn } = useAuthContext();
     const { isSmallerThanDesktop } = useBreakpoints();
+    const { loginUser } = useAuth();
     const schema = yup
         .object({
             email: yup.string().required(),
@@ -50,7 +50,7 @@ const Login: FC = () => {
     });
 
     const onSubmit = async (formData: { email: string; password: string }) => {
-        await signIn(formData.email, formData.password);
+        await loginUser(formData.email, formData.password);
     };
 
     return (

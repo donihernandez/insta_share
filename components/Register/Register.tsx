@@ -23,8 +23,7 @@ import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
 
 import { COLORS } from '@/styles/theme';
-import { useBreakpoints } from 'hooks';
-import { useAuthContext } from 'context/AuthContext';
+import { useAuth, useBreakpoints } from 'hooks';
 
 type FormData = {
     email: string;
@@ -34,8 +33,9 @@ type FormData = {
 };
 
 const Register: FC = () => {
-    const { signUp } = useAuthContext();
     const { isSmallerThanDesktop } = useBreakpoints();
+    const { registerUser } = useAuth();
+
     const schema = yup
         .object({
             confirmPassword: yup.string().required(),
@@ -60,7 +60,11 @@ const Register: FC = () => {
         username: string;
     }) => {
         if (formData.password === formData.confirmPassword) {
-            await signUp(formData.email, formData.password, formData.username);
+            await registerUser(
+                formData.username,
+                formData.email,
+                formData.password,
+            );
         } else {
             Swal.fire({
                 confirmButtonColor: COLORS.primary,

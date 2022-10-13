@@ -42,6 +42,7 @@
   "types": [
     "node",
     "jest",
+    "cypress",
     "@testing-library/jest-dom"
   ],
   "exclude": [

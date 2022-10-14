@@ -1,23 +1,23 @@
 import type { FC, ReactNode } from 'react';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useAuthContext } from 'context/AuthContext';
+import { useSessionStatus } from 'hooks/useSessionStatus';
 
 interface IProtectedRouteProps {
     children: ReactNode;
 }
 
 const ProtectedRoute: FC<IProtectedRouteProps> = ({ children }) => {
-    const { user } = useAuthContext();
     const router = useRouter();
+    const { isLoggedIn } = useSessionStatus();
 
     useEffect(() => {
-        if (!user) {
-            router.push('/login');
+        if (!isLoggedIn) {
+            router.push(`/auth/signin?callbackUrl=${router.asPath}`);
         }
-    }, [router, user]);
+    }, [isLoggedIn, router]);
 
-    return <>{user ? children : null}</>;
+    return <>{children}</>;
 };
 
 export { ProtectedRoute };

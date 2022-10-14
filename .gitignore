@@ -37,7 +37,13 @@ next-env.d.ts
 
 .eslintcache
 
-cypress/support/
-cypress/fixtures/
 cypress/snapshots/
 cypress/downloads/
+cypress/videos
+
+.env.local
+
+.fleet
+
+*.log
+

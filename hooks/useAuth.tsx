@@ -6,20 +6,11 @@ const useAuth = () => {
     const router = useRouter();
 
     const loginUser = async (email: string, password: string) => {
-        const res: any = await signIn('credentials', {
+        await signIn('credentials', {
             email: email,
             password: password,
             redirect: false,
-        });
-
-        return res.error ? console.log(res.error) : redirectToHome();
-    };
-
-    const redirectToHome = () => {
-        const { pathname } = router;
-        if (pathname === '/login' || pathname === '/register') {
-            router.push('/');
-        }
+        }).catch(err => err.message);
     };
 
     const registerUser = async (

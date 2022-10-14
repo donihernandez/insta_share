@@ -1,7 +1,3 @@
-/** 
-Source : 
-https://github.com/vercel/next.js/blob/canary/examples/with-mongodb-mongoose/utils/dbConnect.js 
-**/
 import mongoose from 'mongoose';
 
 if (!process.env.MONGODB_URI) {
@@ -42,4 +38,4 @@ async function dbConnect() {
     return cached.conn;
 }
 
-export default dbConnect;
+export { dbConnect };

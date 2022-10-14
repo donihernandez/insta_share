@@ -1,7 +1,7 @@
 import User from 'models/User';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { validateForm } from '../../lib/auth';
-import bcrypt from 'bcrypt';
+import { hash } from 'bcryptjs';
 
 interface ResponseData {
     error?: string;
@@ -26,7 +26,7 @@ export default async function handler(
         return res.status(400).json(errorMessage as ResponseData);
     }
 
-    const hashedPassword = await bcrypt.hash(password, 12);
+    const hashedPassword = await hash(password, 12);
 
     const newUser = new User({
         email,

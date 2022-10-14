@@ -1,6 +1,6 @@
 import { compare, hash } from 'bcryptjs';
+import { dbConnect } from 'lib/db';
 import User from 'models/User';
-import dbConnect from './dbConnect';
 
 const hashPassword = async (password: string) => {
     const hashedPassword = await hash(password, 12);

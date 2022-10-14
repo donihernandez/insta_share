@@ -1,8 +1,8 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import dbConnect from 'lib/dbConnect';
+import { dbConnect } from 'lib/db';
 import User from 'models/User';
-import { compare } from 'bcrypt';
+import { compare } from 'bcryptjs';
 
 const credentials: any = {
     email: {
@@ -18,7 +18,7 @@ export default NextAuth({
         secret: process.env.NEXT_PUBLIC_AUTH_SECRET,
     },
     pages: {
-        signIn: '/login',
+        signIn: '/auth/signin',
     },
     providers: [
         // Email & Password

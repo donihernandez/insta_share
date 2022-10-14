@@ -19,12 +19,14 @@ import Link from 'next/link';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/router';
 
 import { COLORS } from '@/styles/theme';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 
 import { useAuth, useBreakpoints } from 'hooks';
 import { signIn } from 'next-auth/react';
+import { useSessionStatus } from 'hooks/useSessionStatus';
 
 type FormData = {
     email: string;
@@ -34,6 +36,8 @@ type FormData = {
 const Login: FC = () => {
     const { isSmallerThanDesktop } = useBreakpoints();
     const { loginUser } = useAuth();
+    const router = useRouter();
+    const { callbackUrl } = router.query;
     const schema = yup
         .object({
             email: yup.string().required(),
@@ -48,6 +52,13 @@ const Login: FC = () => {
     } = useForm<FormData>({
         resolver: yupResolver(schema),
     });
+
+    const { isLoading, isLoggedIn } = useSessionStatus();
+    if (isLoggedIn) {
+        router.push(
+            callbackUrl && typeof callbackUrl === 'string' ? callbackUrl : '/',
+        );
+    }
 
     const onSubmit = async (formData: { email: string; password: string }) => {
         await loginUser(formData.email, formData.password);

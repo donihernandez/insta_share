@@ -12,6 +12,7 @@
 // You can read more here:
 // https://on.cypress.io/configuration
 // ***********************************************************
-
+import { addCommands } from 'cypress-mongodb';
 // Import commands.js using ES2015 syntax:
+addCommands();
 import './commands';

@@ -43,5 +43,7 @@ cypress/videos
 
 .env.local
 
+.fleet
+
 *.log
 

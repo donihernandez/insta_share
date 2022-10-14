@@ -1,5 +1,5 @@
 import '@testing-library/cypress/add-commands';
-import { hash, compare } from 'bcryptjs';
+import { hash } from 'bcryptjs';
 
 declare global {
     namespace Cypress {

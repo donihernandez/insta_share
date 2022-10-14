@@ -44,6 +44,7 @@
         "@types/node": "18.8.3",
         "@types/react": "18.0.21",
         "@types/react-dom": "18.0.6",
+        "@types/testing-library__cypress": "^5.0.9",
         "@typescript-eslint/eslint-plugin": "^5.40.0",
         "cypress": "^10.10.0",
         "cz-conventional-changelog": "3.3.0",

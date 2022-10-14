@@ -31,6 +31,7 @@
         "react": "18.2.0",
         "react-dom": "18.2.0",
         "react-hook-form": "^7.37.0",
+        "react-icons": "^4.4.0",
         "sweetalert2": "^11.5.0",
         "vercel": "^28.4.10",
         "yup": "^0.32.11"

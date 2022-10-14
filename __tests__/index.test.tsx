@@ -3,7 +3,7 @@ import Home from '@/pages/index';
 
 describe('Home', () => {
     it('renders a heading', () => {
-        render(<Home />);
+        render(<Home session={} />);
 
         const heading = screen.getByRole('heading', {
             name: /welcome to Insta Share/i,

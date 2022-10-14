@@ -7,6 +7,7 @@ import {
     Container,
     Flex,
     FormControl,
+    FormErrorMessage,
     FormLabel,
     Heading,
     Image,
@@ -15,13 +16,53 @@ import {
 } from '@chakra-ui/react';
 
 import Link from 'next/link';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import { useForm } from 'react-hook-form';
+import { useRouter } from 'next/router';
 
 import { COLORS } from '@/styles/theme';
 import { ArrowBackIcon } from '@chakra-ui/icons';
-import { useBreakpoints } from 'hooks';
+
+import { useAuth, useBreakpoints } from 'hooks';
+import { signIn } from 'next-auth/react';
+import { useSessionStatus } from 'hooks/useSessionStatus';
+
+type FormData = {
+    email: string;
+    password: string;
+};
 
 const Login: FC = () => {
     const { isSmallerThanDesktop } = useBreakpoints();
+    const { loginUser } = useAuth();
+    const router = useRouter();
+    const { callbackUrl } = router.query;
+    const schema = yup
+        .object({
+            email: yup.string().required(),
+            password: yup.string().required(),
+        })
+        .required();
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<FormData>({
+        resolver: yupResolver(schema),
+    });
+
+    const { isLoading, isLoggedIn } = useSessionStatus();
+    if (isLoggedIn) {
+        router.push(
+            callbackUrl && typeof callbackUrl === 'string' ? callbackUrl : '/',
+        );
+    }
+
+    const onSubmit = async (formData: { email: string; password: string }) => {
+        await loginUser(formData.email, formData.password);
+    };
 
     return (
         <Flex bg="black" h="100vh" w="full">
@@ -65,24 +106,37 @@ const Login: FC = () => {
                         Login
                     </Heading>
 
-                    <chakra.form>
-                        <FormControl mb="20px">
+                    <chakra.form onSubmit={handleSubmit(onSubmit)}>
+                        <FormControl
+                            isInvalid={errors.email as unknown as boolean}
+                            mb="20px"
+                        >
                             <FormLabel color={COLORS.white}>Email</FormLabel>
                             <Input
                                 autoComplete="username"
                                 color={COLORS.white}
                                 type="email"
                                 variant="flushed"
+                                {...register('email')}
                             />
+                            <FormErrorMessage>
+                                {errors.email && 'Email is required'}
+                            </FormErrorMessage>
                         </FormControl>
-                        <FormControl>
+                        <FormControl
+                            isInvalid={errors.password as unknown as boolean}
+                        >
                             <FormLabel color={COLORS.white}>Password</FormLabel>
                             <Input
                                 autoComplete="password"
                                 color={COLORS.white}
                                 type="password"
                                 variant="flushed"
+                                {...register('password')}
                             />
+                            <FormErrorMessage>
+                                {errors.password && 'Password is required'}
+                            </FormErrorMessage>
                         </FormControl>
                         <Button
                             _active={{

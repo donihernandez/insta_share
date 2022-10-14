@@ -7,6 +7,7 @@ import {
     Container,
     Flex,
     FormControl,
+    FormErrorMessage,
     FormLabel,
     Heading,
     Image,
@@ -14,13 +15,66 @@ import {
     Text,
 } from '@chakra-ui/react';
 import Link from 'next/link';
+import { ArrowBackIcon } from '@chakra-ui/icons';
+
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import { useForm } from 'react-hook-form';
+import Swal from 'sweetalert2';
 
 import { COLORS } from '@/styles/theme';
-import { ArrowBackIcon } from '@chakra-ui/icons';
-import { useBreakpoints } from 'hooks';
+import { useAuth, useBreakpoints } from 'hooks';
+
+type FormData = {
+    email: string;
+    password: string;
+    confirmPassword: string;
+    username: string;
+};
 
 const Register: FC = () => {
     const { isSmallerThanDesktop } = useBreakpoints();
+    const { registerUser } = useAuth();
+
+    const schema = yup
+        .object({
+            confirmPassword: yup.string().required(),
+            email: yup.string().required(),
+            password: yup.string().required(),
+            username: yup.string().required(),
+        })
+        .required();
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm<FormData>({
+        resolver: yupResolver(schema),
+    });
+
+    const onSubmit = async (formData: {
+        email: string;
+        password: string;
+        confirmPassword: string;
+        username: string;
+    }) => {
+        if (formData.password === formData.confirmPassword) {
+            await registerUser(
+                formData.username,
+                formData.email,
+                formData.password,
+            );
+        } else {
+            Swal.fire({
+                confirmButtonColor: COLORS.primary,
+                icon: 'error',
+                showConfirmButton: true,
+                text: "Passwords don't march!",
+                title: 'Oops...',
+            });
+        }
+    };
 
     return (
         <Flex bg="black" h="100vh" w="full">
@@ -64,34 +118,59 @@ const Register: FC = () => {
                         Register
                     </Heading>
 
-                    <chakra.form>
-                        <FormControl mb="20px">
+                    <chakra.form onSubmit={handleSubmit(onSubmit)}>
+                        <FormControl
+                            isInvalid={errors.email as unknown as boolean}
+                            mb="20px"
+                        >
                             <FormLabel color={COLORS.white}>Username</FormLabel>
                             <Input
                                 color={COLORS.white}
                                 type="text"
                                 variant="flushed"
+                                {...register('username')}
                             />
+                            <FormErrorMessage>
+                                {errors.username && 'Username is required'}
+                            </FormErrorMessage>
                         </FormControl>
-                        <FormControl mb="20px">
+                        <FormControl
+                            isInvalid={errors.email as unknown as boolean}
+                            mb="20px"
+                        >
                             <FormLabel color={COLORS.white}>Email</FormLabel>
                             <Input
                                 autoComplete="username"
                                 color={COLORS.white}
                                 type="email"
                                 variant="flushed"
+                                {...register('email')}
                             />
+                            <FormErrorMessage>
+                                {errors.email && 'Email is required'}
+                            </FormErrorMessage>
                         </FormControl>
-                        <FormControl mb="20px">
+                        <FormControl
+                            isInvalid={errors.password as unknown as boolean}
+                            mb="20px"
+                        >
                             <FormLabel color={COLORS.white}>Password</FormLabel>
                             <Input
                                 autoComplete="current-password"
                                 color={COLORS.white}
                                 type="password"
                                 variant="flushed"
+                                {...register('password')}
                             />
+                            <FormErrorMessage>
+                                {errors.password && 'Password is required'}
+                            </FormErrorMessage>
                         </FormControl>
-                        <FormControl>
+                        <FormControl
+                            isInvalid={
+                                errors.confirmPassword as unknown as boolean
+                            }
+                        >
                             <FormLabel color={COLORS.white}>
                                 Confirm Password
                             </FormLabel>
@@ -100,7 +179,12 @@ const Register: FC = () => {
                                 color={COLORS.white}
                                 type="password"
                                 variant="flushed"
+                                {...register('confirmPassword')}
                             />
+                            <FormErrorMessage>
+                                {errors.confirmPassword &&
+                                    'Confirm Password is required'}
+                            </FormErrorMessage>
                         </FormControl>
                         <Button
                             _active={{

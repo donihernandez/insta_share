@@ -1,27 +1,33 @@
-import type { AppProps } from 'next/app';
-import { useRouter } from 'next/router';
+import type { AppInitialProps, AppProps } from 'next/app';
 
+import { Session } from 'next-auth';
+import { SessionProvider } from 'next-auth/react';
 import { ChakraProvider } from '@chakra-ui/react';
+
 import '../styles/globals.css';
-import { AuthProvider } from 'context/AuthContext';
+import { Router } from 'next/router';
+import { NextComponentType } from 'next';
 import { ProtectedRoute } from '@/components/common/ProtectedRoute';
 
-function MyApp({ Component, pageProps }: AppProps) {
-    const NO_AUTH_REQUIRED = ['/login', '/register'];
-    const router = useRouter();
-
+type ComponentWithAuth = NextComponentType & { auth: boolean };
+interface AppPropsWithAuth extends AppInitialProps {
+    Component: ComponentWithAuth;
+    router: Router;
+    session: Session;
+}
+function MyApp({ Component, pageProps }: AppPropsWithAuth) {
     return (
-        <ChakraProvider>
-            <AuthProvider>
-                {NO_AUTH_REQUIRED.includes(router.pathname) ? (
-                    <Component {...pageProps} />
-                ) : (
+        <SessionProvider session={pageProps.session}>
+            <ChakraProvider>
+                {Component.auth ? (
                     <ProtectedRoute>
                         <Component {...pageProps} />
                     </ProtectedRoute>
+                ) : (
+                    <Component {...pageProps} />
                 )}
-            </AuthProvider>
-        </ChakraProvider>
+            </ChakraProvider>
+        </SessionProvider>
     );
 }
 

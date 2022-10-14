@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es2017",
     "lib": [
       "dom",
       "dom.iterable",
@@ -37,7 +37,10 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+  ],
+  "typeRoots": [
+    "node_modules/@types"
   ],
   "types": [
     "node",
@@ -45,6 +48,7 @@
     "@testing-library/jest-dom"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "cache"
   ]
 }

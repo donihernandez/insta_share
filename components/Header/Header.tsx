@@ -2,14 +2,13 @@ import { FC, useEffect, useState } from 'react';
 import { chakra, Container, Flex, Heading } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useBreakpoints } from '../../hooks';
-import { DesktopMenu } from './DesktopMenu';
-import { MobileMenu } from './MobileMenu';
+import { Menu } from './Menu';
 
 import { COLORS } from '@/styles/theme';
 
 const Header: FC = () => {
     const router = useRouter();
-    const { isSmallerThanDesktop } = useBreakpoints();
+
     const [offset, setOffSet] = useState<number>(0);
 
     useEffect(() => {
@@ -35,16 +34,7 @@ const Header: FC = () => {
             zIndex="666"
         >
             <Container maxW={{ base: '100vw', lg: '80vw' }} w="full">
-                <Flex
-                    alignItems="center"
-                    justifyContent={[
-                        'space-between',
-                        'space-between',
-                        'space-between',
-                        'flex-start',
-                    ]}
-                    w="full"
-                >
+                <Flex alignItems="center" w="full">
                     <Heading
                         color={COLORS.white}
                         cursor="pointer"
@@ -57,7 +47,7 @@ const Header: FC = () => {
                         Insta
                         <chakra.span color={COLORS.orange}>Share</chakra.span>
                     </Heading>
-                    {isSmallerThanDesktop ? <MobileMenu /> : <DesktopMenu />}
+                    <Menu />
                 </Flex>
             </Container>
         </Flex>

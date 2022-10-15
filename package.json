@@ -24,6 +24,7 @@
         "cypress-mongodb": "^5.1.1",
         "firebase": "^9.12.1",
         "framer-motion": "^6",
+        "jszip": "^3.10.1",
         "mongodb": "^4.10.0",
         "mongoose": "^6.6.5",
         "next": "12.3.1",

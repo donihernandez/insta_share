@@ -4,10 +4,8 @@ import {
     chakra,
     Flex,
     FormControl,
-    FormLabel,
     Input,
     Progress,
-    Text,
 } from '@chakra-ui/react';
 import type { FC } from 'react';
 import { useRef, useState } from 'react';
@@ -20,9 +18,6 @@ import { useSession } from 'next-auth/react';
 
 import { COLORS } from '@/styles/theme';
 
-import User from 'models/User';
-import { async } from '@firebase/util';
-import { dbConnect } from 'lib';
 import axios from 'axios';
 
 const FileUpload: FC = () => {
@@ -32,16 +27,21 @@ const FileUpload: FC = () => {
 
     const { data: session } = useSession();
 
-    const handleSubmit = (e: any) => {
+    const handleSubmit = async (e: any) => {
         e.preventDefault();
+        const zip = require('jszip')();
         const file = e.target[0]?.files[0];
 
         if (!file) {
             return;
         }
 
+        zip.file(file.name, file);
+
+        const content = await zip.generateAsync({ type: 'blob' });
+
         const storageRef = ref(storage, `images/${file.name}`);
-        const uploadTask = uploadBytesResumable(storageRef, file);
+        const uploadTask = uploadBytesResumable(storageRef, content);
 
         uploadTask.on(
             'state_changed',
@@ -71,11 +71,12 @@ const FileUpload: FC = () => {
                     async (downloadURL: string) => {
                         const image = {
                             name: file.name,
+                            originalName: file.name,
                             size: file.size,
                             url: downloadURL,
                         };
 
-                        await axios.post('/api/upload', {
+                        await axios.post('/api/files/upload', {
                             image,
                             session,
                         });

@@ -1,4 +1,5 @@
 import { FC, KeyboardEvent, useState } from 'react';
+import { deleteObject, getStorage, ref } from 'firebase/storage';
 
 import {
     Flex,
@@ -7,6 +8,7 @@ import {
     Icon,
     Input,
     Kbd,
+    Link,
     Table,
     TableContainer,
     Tbody,
@@ -19,16 +21,22 @@ import {
 import { useSession } from 'next-auth/react';
 
 import { ImBin, ImFileZip, ImFolderDownload, ImPencil2 } from 'react-icons/im';
+import { storage } from 'lib/firebase';
+
 import { COLORS } from '@/styles/theme';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { blob } from 'stream/consumers';
 
 interface IFileList {
-    fileList: {
-        name: string;
-        size: number;
-        url: string;
-    }[];
+    fileList: FileItem[];
+}
+
+interface FileItem {
+    name: string;
+    originalName: string;
+    size: number;
+    url: string;
 }
 
 const FilesList: FC<IFileList> = ({ fileList }) => {
@@ -46,6 +54,7 @@ const FilesList: FC<IFileList> = ({ fileList }) => {
 
     const [isEditing, setIsEditing] = useState(false);
     const [newFileName, setNewFileName] = useState('');
+
     const { data: session } = useSession();
 
     const selectFileToEditName = (name: string) => {
@@ -100,6 +109,36 @@ const FilesList: FC<IFileList> = ({ fileList }) => {
         }
     };
 
+    const handleDeleteFile = async (file: FileItem) => {
+        const httpsReference = ref(storage, file.url);
+        deleteObject(httpsReference)
+            .then(async () => {
+                if (session) {
+                    await axios.post('/api/files/deleteFile', {
+                        email: session.user?.email,
+                        file,
+                    });
+
+                    Swal.fire({
+                        icon: 'success',
+                        position: 'top-end',
+                        showConfirmButton: false,
+                        timer: 1500,
+                        title: 'File Deleted Sucessfully!',
+                    });
+                }
+            })
+            .catch(err =>
+                Swal.fire({
+                    confirmButtonColor: COLORS.primary,
+                    icon: 'error',
+                    showConfirmButton: true,
+                    text: err,
+                    title: 'Oops...',
+                }),
+            );
+    };
+
     const renderEditName = (name: string) => {
         return (
             <FormControl>
@@ -117,53 +156,65 @@ const FilesList: FC<IFileList> = ({ fileList }) => {
     };
 
     return fileList.length > 0 ? (
-        <TableContainer mt="60px" w="full">
-            <Table variant="simple">
-                <Thead>
-                    <Tr>
-                        <Th {...colorStyle}>File Name</Th>
-                        <Th {...colorStyle}>File Size</Th>
-                        <Th {...colorStyle}>Actions</Th>
-                    </Tr>
-                </Thead>
-                <Tbody>
-                    {fileList.map((file, index) => {
-                        return (
-                            <Tr key={index}>
-                                <Td {...colorStyle}>
-                                    {isEditing ? (
-                                        renderEditName(file.name)
-                                    ) : (
-                                        <Text>{file.name}</Text>
-                                    )}
-                                </Td>
-                                <Td {...colorStyle}>{file.size}</Td>
-                                <Td {...colorStyle}>
-                                    <Flex
-                                        alignItems="center"
-                                        justifyContent="space-between"
-                                    >
-                                        <Icon
-                                            as={ImPencil2}
-                                            onClick={() =>
-                                                selectFileToEditName(file.name)
-                                            }
-                                            {...iconStyles}
-                                        />
-                                        <Icon
-                                            as={ImFolderDownload}
-                                            {...iconStyles}
-                                        />
-                                        <Icon as={ImFileZip} {...iconStyles} />
-                                        <Icon as={ImBin} {...iconStyles} />
-                                    </Flex>
-                                </Td>
-                            </Tr>
-                        );
-                    })}
-                </Tbody>
-            </Table>
-        </TableContainer>
+        <>
+            <TableContainer mt="60px" w="full">
+                <Table variant="simple">
+                    <Thead>
+                        <Tr>
+                            <Th {...colorStyle}>File Name</Th>
+                            <Th {...colorStyle}>File Size</Th>
+                            <Th {...colorStyle}>Actions</Th>
+                        </Tr>
+                    </Thead>
+                    <Tbody>
+                        {fileList.map((file, index) => {
+                            return (
+                                <Tr key={index}>
+                                    <Td {...colorStyle}>
+                                        {isEditing ? (
+                                            renderEditName(file.name)
+                                        ) : (
+                                            <Text>{file.name}</Text>
+                                        )}
+                                    </Td>
+                                    <Td {...colorStyle}>{file.size}</Td>
+                                    <Td {...colorStyle}>
+                                        <Flex
+                                            alignItems="center"
+                                            justifyContent="space-between"
+                                        >
+                                            <Icon
+                                                as={ImPencil2}
+                                                onClick={() =>
+                                                    selectFileToEditName(
+                                                        file.name,
+                                                    )
+                                                }
+                                                {...iconStyles}
+                                            />
+                                            <Link href={file.url}>
+                                                <Icon
+                                                    as={ImFolderDownload}
+                                                    {...iconStyles}
+                                                />
+                                            </Link>
+
+                                            <Icon
+                                                as={ImBin}
+                                                onClick={() =>
+                                                    handleDeleteFile(file)
+                                                }
+                                                {...iconStyles}
+                                            />
+                                        </Flex>
+                                    </Td>
+                                </Tr>
+                            );
+                        })}
+                    </Tbody>
+                </Table>
+            </TableContainer>
+        </>
     ) : null;
 };
 

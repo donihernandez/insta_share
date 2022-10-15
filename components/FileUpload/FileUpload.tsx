@@ -9,7 +9,8 @@ import {
     Progress,
     Text,
 } from '@chakra-ui/react';
-import { FC, useEffect, useRef, useState } from 'react';
+import type { FC } from 'react';
+import { useRef, useState } from 'react';
 import { ImFolderUpload } from 'react-icons/im';
 
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
@@ -68,8 +69,14 @@ const FileUpload: FC = () => {
                 });
                 getDownloadURL(uploadTask.snapshot.ref).then(
                     async (downloadURL: string) => {
-                        await axios.post('/api/image', {
-                            image: downloadURL,
+                        const image = {
+                            name: file.name,
+                            size: file.size,
+                            url: downloadURL,
+                        };
+
+                        await axios.post('/api/upload', {
+                            image,
                             session,
                         });
                     },

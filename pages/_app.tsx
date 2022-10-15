@@ -8,6 +8,7 @@ import '../styles/globals.css';
 import { Router } from 'next/router';
 import { NextComponentType } from 'next';
 import { ProtectedRoute } from '@/components/common/ProtectedRoute';
+import { Layout } from '@/components/common/Layout';
 
 type ComponentWithAuth = NextComponentType & { auth: boolean };
 interface AppPropsWithAuth extends AppInitialProps {
@@ -20,9 +21,11 @@ function MyApp({ Component, pageProps }: AppPropsWithAuth) {
         <SessionProvider session={pageProps.session}>
             <ChakraProvider>
                 {Component.auth ? (
-                    <ProtectedRoute>
-                        <Component {...pageProps} />
-                    </ProtectedRoute>
+                    <Layout>
+                        <ProtectedRoute>
+                            <Component {...pageProps} />
+                        </ProtectedRoute>
+                    </Layout>
                 ) : (
                     <Component {...pageProps} />
                 )}

@@ -4,14 +4,6 @@ import { dbConnect } from 'lib/db';
 import User from 'models/User';
 import { compare } from 'bcryptjs';
 
-const credentials: any = {
-    email: {
-        label: 'email',
-        type: 'text',
-    },
-    password: { label: 'Password', type: 'password' },
-};
-
 export default NextAuth({
     debug: process.env.NODE_ENV === 'development',
     jwt: {

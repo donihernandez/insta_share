@@ -1,7 +1,10 @@
-import type { FC } from 'react';
+import { FC, useState } from 'react';
 
 import { Container, Flex, Heading } from '@chakra-ui/react';
+import { useSession } from 'next-auth/react';
+
 import { COLORS } from '@/styles/theme';
+import { FileUpload } from '../FileUpload';
 
 const Home: FC = () => {
     return (
@@ -19,9 +22,14 @@ const Home: FC = () => {
                     m="200px 0 40px 0"
                     w="full"
                 >
-                    <Heading as="h1" color={COLORS.white}>
+                    <Heading
+                        as="h1"
+                        color={COLORS.white}
+                        textTransform="uppercase"
+                    >
                         Welcome to Insta Share
                     </Heading>
+                    <FileUpload />
                 </Flex>
             </Container>
         </Flex>

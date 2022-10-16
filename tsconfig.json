@@ -32,12 +32,17 @@
       "@/utils/*": [
         "utils/*"
       ],
+      "@/models/*": [
+        "models/*"
+      ]
     }
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    "jest.setup.js",
+    "jest.setup.js",
   ],
   "typeRoots": [
     "node_modules/@types"

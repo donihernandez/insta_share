@@ -1,5 +1,5 @@
-import { dbConnect } from 'lib';
-import User from 'models/User';
+import { dbConnect } from '../../../lib';
+import User from '../../../models/User';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(

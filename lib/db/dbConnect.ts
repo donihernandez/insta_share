@@ -1,19 +1,19 @@
+/* eslint-disable max-len */
 import mongoose from 'mongoose';
 
-if (!process.env.MONGODB_URI) {
-    throw new Error('Please add your MONGODB_URI to .env.local');
-}
+// if (!process.env.NEXT_PUBLIC_MONGODB_URI) {
+//     throw new Error('Please add your MONGODB_URI to .env.local');
+// }
 
-const MONGODB_URI: string = process.env.MONGODB_URI;
+// const MONGODB_URI: string = process.env.NEXT_PUBLIC_MONGODB_URI;
 
-/**
- * Global is used here to maintain a cached connection across hot reloads
- * in development. This prevents connections growing exponentially
- * during API Route usage.
- */
+const MONGODB_URI =
+    'mongodb+srv://vercel-admin-user:9I3rRonPu1jbybL6@cluster0.hxhkhh8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+
 const globalWithMongoose = global as typeof globalThis & {
     mongoose: any;
 };
+
 let cached = globalWithMongoose.mongoose;
 
 if (!cached) {

@@ -76,6 +76,8 @@ const FileUpload: FC = () => {
                             url: downloadURL,
                         };
 
+                        console.log(image);
+
                         await axios.post('/api/files/upload', {
                             image,
                             session,

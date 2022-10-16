@@ -13,7 +13,13 @@ const ProtectedRoute: FC<IProtectedRouteProps> = ({ children }) => {
 
     useEffect(() => {
         if (!isLoggedIn) {
-            router.push(`/auth/signin?callbackUrl=${router.asPath}`);
+            router.push(
+                `/auth/signin?callbackUrl=${router.asPath}`,
+                undefined,
+                {
+                    shallow: true,
+                },
+            );
         }
     }, [isLoggedIn, router]);
 

@@ -1,34 +1,33 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Insta Share
 
-## Getting Started
+This is [Insta Share](https://instashare.vercel.app/) a file uploader project made with [Nextjs](https://nextjs.org)
 
-First, run the development server:
+## Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+-   Create a MongoDB account and create a cluster
+-   Create a Firebase account and enable the file storage
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Installation
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+-   npm install
+-   npm i -g commitizen
+-   npm run prepare
+-   npm run dev
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Testing
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+I've added 2 type of testings:
 
-## Learn More
+### E2E with Cypress for Authentication
 
-To learn more about Next.js, take a look at the following resources:
+(NOTE): Please change the MONGO_DB_URI at cypress.config.ts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+To Run the E2E tests:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+-   npm run cypress
 
-## Deploy on Vercel
+### Unit Testing with Jest (Incomplete)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+You can check the file inside at **tests**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+-   npm run test

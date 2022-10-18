@@ -218,7 +218,7 @@ const Register: FC = () => {
                             transition="all 0.3s ease-in"
                         >
                             {'Already have an accout?'}
-                            <Link href="/login" passHref>
+                            <Link href="/auth/login" passHref>
                                 <ChakraLink>
                                     <chakra.span
                                         _hover={{
